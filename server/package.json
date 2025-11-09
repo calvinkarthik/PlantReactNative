@@ -1,0 +1,12 @@
+{
+  "name": "plant-server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "telemetry": "node telemetry-ws.js",
+    "camera": "node camera-server.js"
+  },
+  "dependencies": {
+    "ws": "^8.13.0"
+  }
+}

@@ -6,6 +6,7 @@ import { Colors, BrandColors } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import { Joystick } from '@/components/Joystick';
 import { VideoFeedStub } from '@/components/VideoFeedStub';
+import useTelemetry from '@/hooks/useTelemetry';
 
 export function JoyConScreen() {
   const colorScheme = useColorScheme();
@@ -16,8 +17,17 @@ export function JoyConScreen() {
   const [lightOn, setLightOn] = useState(false);
   const [hornOn, setHornOn] = useState(false);
 
+  // telemetry hook: send x/y to Pi telemetry WebSocket
+  const { connected: telemetryConnected, sendXY } = useTelemetry();
+
   const handleVectorChange = (x: number, y: number) => {
     updateRobotVector(x, y);
+    // send coordinates to Pi (best-effort)
+    try {
+      sendXY(Math.round(x * 100) / 100, Math.round(y * 100) / 100);
+    } catch (e) {
+      // ignore send errors for now
+    }
   };
 
   const handleStartStop = () => {
